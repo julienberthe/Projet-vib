@@ -1,0 +1,81 @@
+%--------------------------------------------------------------------------
+%                programme ecrit par Bibou et Loulou
+%
+%                 "petit" projet numerique du TACS
+%                      EF classiques et malins
+%
+%==========================================================================
+
+
+%Definition du probleme:
+
+% on considere un poutre elastique de longueur L, de section S et de module
+% de Young E
+close all;
+clear; clc;
+
+disp('I	Construction du probleme mecanique EF');
+	%parametres materiaux
+	donnee.mat.L=1;			%longueur:
+	donnee.mat.S=10^(-4);		%section:
+	donnee.mat.E=220*10^9;		%module de young
+	donnee.mat.rho=70000;		%masse volumique
+	donnee.mat.alpha=0;		%coefficient d'amortissement C=alpha*K+beta*M
+	donnee.mat.beta=0;
+	%parametres utiles par la suite
+	donnee.changementbase='non';	
+	donnee.statique='non';
+	
+	%Parametres de la methode EF
+	donnee.nelem = 160;	%nombre d'elements
+	donnee.npas  = 300;	%nombre de pas de temps
+
+	%caracteristique du probleme
+	donnee.T= 0.003;	%temps d'etude
+
+	%mise en donnee
+	for i=1:donnee.nelem
+		donnee.Elem{i}.xinit=(i-1)*donnee.mat.L/donnee.nelem;
+		donnee.Elem{i}.xfinal=i*donnee.mat.L/donnee.nelem;
+		donnee.Elem{i}.dx=donnee.mat.L/donnee.nelem;
+		donnee.Elem{i}.S=donnee.mat.S;
+		donnee.Elem{i}.young=donnee.mat.E;
+		donnee.Elem{i}.rho=donnee.mat.rho;
+	end
+
+	donnee.dt =donnee.T/donnee.npas; 
+	donnee.t  =[0:donnee.dt:donnee.T];
+	donnee.dx =donnee.mat.L/donnee.nelem;
+	donnee.x  =[0:donnee.dx:donnee.mat.L];
+
+	%construction des differentes amtrice du probleme EF
+disp('II	Construction de la matrice');
+    matrice=Construction_EF(donnee);
+	
+disp('III	Construction du chargement');
+	% type de chargement accessible: echelon en bout de poutre, creneau en bout de poutre, harmonique... pour plus d'info voir Construction_Chargement.m
+	chargement.type = 'echelon en bout de poutre';
+	chargement.parametre{1}=1;				%amplitude
+	chargement.parametre{2}=[0.2 0.3];		%quand ?
+%	chargement.type = 'harmonique';
+%	chargement.parametre{1}=10;		%amplitude
+%	chargement.parametre{2}=60;		%frequence
+	chargement=Construction_Chargement(chargement,donnee);
+
+	%affichage du chargement, pour voir les options d'affichage voir Affichage.m
+	option.type='en fonction du temps';
+	option.titre='effort en bout de poutre en fonction du temps';
+	Affichage(chargement.F(donnee.nelem,:),donnee,option)
+	
+    
+disp('IV	Calcul des modes et valeurs propres');
+	ModePropre=CalculModePropre(matrice,donnee);
+	option.type='4 Modes Propres';
+	option.Mode=[1 2 3 4];
+	option.titre=sprintf('Mode propre numero %d',option.Mode);
+	Affichage(ModePropre,donnee,option);
+    
+disp('V	Resolution du probleme EF sur la base des modes propres');
+%[U,Eps,S]=Resolution_EF(......);
+
+

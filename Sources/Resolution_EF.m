@@ -1,0 +1,1 @@
+function [toto1,toto2,toto3]=Resolution_EF(chargement,donnee)
