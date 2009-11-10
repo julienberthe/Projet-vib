@@ -47,6 +47,7 @@ disp('I	Construction du probleme mecanique EF');
 	donnee.t  =[0:donnee.dt:donnee.T];
 	donnee.dx =donnee.mat.L/donnee.nelem;
 	donnee.x  =[0:donnee.dx:donnee.mat.L];
+    donnee.f = 22000000;
 
 	%construction des differentes amtrice du probleme EF
 disp('II	Construction de la matrice');
@@ -76,6 +77,10 @@ disp('IV	Calcul des modes et valeurs propres');
 	Affichage(ModePropre,donnee,option);
     
 disp('V	Resolution du probleme EF sur la base des modes propres');
-%[U,Eps,S]=Resolution_EF(......);
-
+%	[U,Eps,S]=Resolution_EF(......);
+    SolutionStatique=Statique_EF(matrice,donnee);
+    figure
+    plot(donnee.x,SolutionStatique.U)
+    
+    
 
