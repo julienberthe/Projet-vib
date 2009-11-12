@@ -1,3 +1,4 @@
+%détermination du déplacement "statique"
 function toto=Statique_EF(matrice);
 
 toto.Us=((matrice.Ks)^-1)*matrice.Fs;

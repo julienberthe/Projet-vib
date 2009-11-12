@@ -76,11 +76,14 @@ disp('IV	Calcul des modes et valeurs propres');
 	option.titre=sprintf('Mode propre numero %d',option.Mode);
 	Affichage(ModePropre,donnee,option);
     
-disp('V	Resolution du probleme EF sur la base des modes propres');
-%	[U,Eps,S]=Resolution_EF(......);
-    SolutionStatique=Statique_EF(matrice,donnee);
+disp('IVb Détermination du mode statique')    
+SolutionStatique=Statique_EF(matrice,donnee);
     figure
     plot(donnee.x,SolutionStatique.U)
+    
+disp('V	Resolution du probleme EF sur la base des modes propres');
+%	[U,Eps,S]=Resolution_EF(......);
+    
     
     
 
