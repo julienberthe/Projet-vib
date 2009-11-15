@@ -12,7 +12,9 @@ uu=zeros(donnee.nelem+1,donnee.npas+1);
 
 %%Détermination des coefficients de l'équation différentielle
     MM=mat_vp'*matrice.M*mat_vp;
+    MM
     KK=mat_vp'*matrice.K_ef*mat_vp;
+    KK
     F=zeros(donnee.nelem+1,donnee.npas+1);
     F(2:donnee.nelem+1,:)=chargement.F(:,:);
 
@@ -20,11 +22,15 @@ uu=zeros(donnee.nelem+1,donnee.npas+1);
     FF(:,i)=mat_vp'*F(:,i);
     end
     ed.WW=inv(MM)*KK;
-   
+   ed.WW
     for i=1:nbmode
-        ed.W(i)=sqrt(ed.WW(i,i));        
+        if abs(ed.WW(i,i))<10^-6
+            ed.W(i)=0;
+        else
+            ed.W(i)=sqrt(ed.WW(i,i));        
+        end
     end
-    
+    ed.W
 %%on cherche u au noeud de la forme ui=Ai*cos(wi*t)+Bi*sin(wi*t)+Ci
 %%on distingue pour cela 3 phases de calcul
 %%%%%%  si 0<t<T1 F(t)=0  donc u=0
@@ -42,17 +48,19 @@ uu=zeros(donnee.nelem+1,donnee.npas+1);
             ed.A(i)=-ed.C(i)*cos(ed.W(i)*pas1);
             ed.B(i)=-ed.C(i)*sin(ed.W(i)*pas1);
         end
-        
+      
         for j=pas1:pas2
             gg(:,j)=fct_coef(ed,j);
             ggd(:,j)=fct_coef_d(ed,j);
         end
+        gg
 %%%%%%T2<t
         for i=1:nbmode
             ed.C(i)=0;
             ed.A(i)=(sin(ed.W(i)*pas2)*ggd(i,pas2)-ed.W(i)*cos(ed.W(i)*pas2)*gg(i,pas2))/ed.W(i);
             ed.B(i)=(cos(ed.W(i)*pas2)*ggd(i,pas2)+ed.W(i)*sin(ed.W(i)*pas2)*gg(i,pas2))/ed.W(i);
         end
+        %ed.A
         for j=pas2:donnee.T
             gg(:,j)=fct_coef(ed,j);
             ggd(:,j)=fct_coef_d(ed,j);
@@ -62,5 +70,6 @@ uu=zeros(donnee.nelem+1,donnee.npas+1);
 for i=1:donnee.npas
    uu(:,i)=mat_vp*gg(:,i);
 end
+%uu
 toto1=uu;
 toto2=uu/donnee.mat.L;
