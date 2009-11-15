@@ -32,8 +32,8 @@ disp('I	Construction du probleme mecanique EF');
 
 	%caracteristique du probleme
 	donnee.T= 0.003;	%temps d'etude
-
-	%mise en donnee
+    
+    %mise en donnee
 	for i=1:donnee.nelem
 		donnee.Elem{i}.xinit=(i-1)*donnee.mat.L/donnee.nelem;
 		donnee.Elem{i}.xfinal=i*donnee.mat.L/donnee.nelem;
@@ -78,14 +78,17 @@ disp('IV	Calcul des modes et valeurs propres');
     
 disp('IVb Détermination du mode statique')    
 SolutionStatique=Statique_EF(matrice,donnee);
-    figure
-    plot(donnee.x,SolutionStatique.U)
+   % figure
+    %plot(donnee.x,SolutionStatique.U)
     
 disp('V	Resolution du probleme EF sur la base des modes propres');
-%	[U,Eps,S]=Resolution_EF(......);
+%nombre de modes propres à pendre en compte
+ModePropre.Nb_ef=30;
+mat_vp=ModePropre.Matrice(:,1:ModePropre.Nb_ef);
+[U,Eps]=Resolution_EF(chargement,donnee,ModePropre,matrice,mat_vp);
     
-    MM=matrice.M*ModePropre.Matrice;
-    KK=matrice.K_ef*ModePropre.Matrice;
-    coef=MM^-1*KK;
+    option.type='en fonction du temps';
+	option.titre='déplacement extrémité de la poutre en fct du tps';
+	Affichage(U(donnee.nelem,:),donnee,option)
     
 

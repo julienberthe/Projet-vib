@@ -14,6 +14,6 @@ ModePropre.Matrice=VecteurPropre(:,index);
 
 for i=1:size(ValeurPropre,1)
 	ModePropre.Vecteur{i}	=ModePropre.Matrice(:,i);
-	ModePropre.Valeur{i}	=VP(i);
+	ModePropre.Valeur{i}	=vp(i);
 end
 end
