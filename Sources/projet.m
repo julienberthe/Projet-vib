@@ -27,8 +27,8 @@ disp('I	Construction du probleme mecanique EF');
 	donnee.statique='non';
 	
 	%Parametres de la methode EF
-	donnee.nelem = 160;	%nombre d'elements
-	donnee.npas  = 300;	%nombre de pas de temps
+	donnee.nelem = 10;	%nombre d'elements
+	donnee.npas  = 100;	%nombre de pas de temps
 
 	%caracteristique du probleme
 	donnee.T= 0.003;	%temps d'etude
@@ -83,7 +83,7 @@ SolutionStatique=Statique_EF(matrice,donnee);
     
 disp('V	Resolution du probleme EF sur la base des modes propres');
 %nombre de modes propres à pendre en compte
-ModePropre.Nb_ef=30;
+ModePropre.Nb_ef=5;
 mat_vp=ModePropre.Matrice(:,1:ModePropre.Nb_ef);
 [U,Eps]=Resolution_EF(chargement,donnee,ModePropre,matrice,mat_vp);
     
