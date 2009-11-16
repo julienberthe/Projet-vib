@@ -28,10 +28,10 @@ disp('I	Construction du probleme mecanique EF');
 	
 	%Parametres de la methode EF
 	donnee.nelem = 160;	%nombre d'elements
-	donnee.npas  = 500;	%nombre de pas de temps
+	donnee.npas  = 300;	%nombre de pas de temps
 
 	%caracteristique du probleme
-	donnee.T= 0.01;	%temps d'etude
+	donnee.T= 0.001;	%temps d'etude
     
     %mise en donnee
 	for i=1:donnee.nelem
@@ -57,7 +57,7 @@ disp('III	Construction du chargement');
 	% type de chargement accessible: echelon en bout de poutre, creneau en bout de poutre, harmonique... pour plus d'info voir Construction_Chargement.m
 	chargement.type = 'echelon en bout de poutre';
 	chargement.parametre{1}=1;				%amplitude
-	chargement.parametre{2}=[0.2 1.];		%quand ?
+	chargement.parametre{2}=[0.2 0.3];		%quand ?
 %	chargement.type = 'harmonique';
 %	chargement.parametre{1}=10;		%amplitude
 %	chargement.parametre{2}=60;		%frequence
@@ -83,7 +83,7 @@ SolutionStatique=Statique_EF(matrice,donnee);
     
 disp('V	Resolution du probleme EF sur la base des modes propres');
 %nombre de modes propres à pendre en compte
-ModePropre.Nb_ef=50;
+ModePropre.Nb_ef=100;
 option.type='euler AR';
 [U,Eps]=Resolution_EF(chargement,donnee,ModePropre,SolutionStatique,option);
     

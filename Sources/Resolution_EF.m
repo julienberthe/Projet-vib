@@ -85,6 +85,7 @@ V=zeros(donnee.nelem+1,donnee.npas+1);
 A=zeros(donnee.nelem+1,donnee.npas+1);
 
 U=uu+UFs;
+
 V=uud+UFsd;
 A=uudd+UFsdd;
 %sauvegarde des résultats
