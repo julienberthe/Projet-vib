@@ -27,11 +27,11 @@ disp('I	Construction du probleme mecanique EF');
 	donnee.statique='non';
 	
 	%Parametres de la methode EF
-	donnee.nelem = 10;	%nombre d'elements
-	donnee.npas  = 100;	%nombre de pas de temps
+	donnee.nelem = 160;	%nombre d'elements
+	donnee.npas  = 500;	%nombre de pas de temps
 
 	%caracteristique du probleme
-	donnee.T= 0.003;	%temps d'etude
+	donnee.T= 0.01;	%temps d'etude
     
     %mise en donnee
 	for i=1:donnee.nelem
@@ -57,7 +57,7 @@ disp('III	Construction du chargement');
 	% type de chargement accessible: echelon en bout de poutre, creneau en bout de poutre, harmonique... pour plus d'info voir Construction_Chargement.m
 	chargement.type = 'echelon en bout de poutre';
 	chargement.parametre{1}=1;				%amplitude
-	chargement.parametre{2}=[0.2 0.3];		%quand ?
+	chargement.parametre{2}=[0.2 1.];		%quand ?
 %	chargement.type = 'harmonique';
 %	chargement.parametre{1}=10;		%amplitude
 %	chargement.parametre{2}=60;		%frequence
@@ -66,7 +66,7 @@ disp('III	Construction du chargement');
 	%affichage du chargement, pour voir les options d'affichage voir Affichage.m
 	option.type='en fonction du temps';
 	option.titre='effort en bout de poutre en fonction du temps';
-	Affichage(chargement.F(donnee.nelem,:),donnee,option)
+	%Affichage(chargement.F(donnee.nelem,:),donnee,option)
 	
     
 disp('IV	Calcul des modes et valeurs propres');
@@ -74,7 +74,7 @@ disp('IV	Calcul des modes et valeurs propres');
 	option.type='4 Modes Propres';
 	option.Mode=[1 2 3 4];
 	option.titre=sprintf('Mode propre numero %d',option.Mode);
-	Affichage(ModePropre,donnee,option);
+	%Affichage(ModePropre,donnee,option);
     
 disp('IVb Détermination du mode statique')    
 SolutionStatique=Statique_EF(matrice,donnee);
@@ -83,12 +83,17 @@ SolutionStatique=Statique_EF(matrice,donnee);
     
 disp('V	Resolution du probleme EF sur la base des modes propres');
 %nombre de modes propres à pendre en compte
-ModePropre.Nb_ef=5;
-mat_vp=ModePropre.Matrice(:,1:ModePropre.Nb_ef);
-[U,Eps]=Resolution_EF(chargement,donnee,ModePropre,matrice,mat_vp);
+ModePropre.Nb_ef=50;
+option.type='euler AR';
+[U,Eps]=Resolution_EF(chargement,donnee,ModePropre,SolutionStatique,option);
     
     option.type='en fonction du temps';
 	option.titre='déplacement extrémité de la poutre en fct du tps';
-	Affichage(U(donnee.nelem,:),donnee,option)
+	Affichage(U.U(donnee.nelem,:),donnee,option)
+    option.titre='vitesse extrémité de la poutre en fct du tps';
+    
+    Affichage(U.V(donnee.nelem,:),donnee,option)
+    option.titre='accélération extrémité de la poutre en fct du tps';
+    Affichage(U.A(donnee.nelem,:),donnee,option)
     
 
