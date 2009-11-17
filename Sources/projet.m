@@ -31,7 +31,7 @@ disp('I	Construction du probleme mecanique EF');
 	donnee.npas  = 300;	%nombre de pas de temps
 
 	%caracteristique du probleme
-	donnee.T= 0.001;	%temps d'etude
+	donnee.T= 0.1;	%temps d'etude
     
     %mise en donnee
 	for i=1:donnee.nelem
@@ -57,16 +57,16 @@ disp('III	Construction du chargement');
 	% type de chargement accessible: echelon en bout de poutre, creneau en bout de poutre, harmonique... pour plus d'info voir Construction_Chargement.m
 	chargement.type = 'echelon en bout de poutre';
 	chargement.parametre{1}=1;				%amplitude
-	chargement.parametre{2}=[0.2 0.3];		%quand ?
-%	chargement.type = 'harmonique';
-%	chargement.parametre{1}=10;		%amplitude
-%	chargement.parametre{2}=60;		%frequence
+	chargement.parametre{2}=[0.2 1];		%quand ?
+    %chargement.type = 'harmonique';
+    %chargement.parametre{1}=10;		%amplitude
+	%chargement.parametre{2}=60;		%frequence
 	chargement=Construction_Chargement(chargement,donnee);
 
 	%affichage du chargement, pour voir les options d'affichage voir Affichage.m
 	option.type='en fonction du temps';
 	option.titre='effort en bout de poutre en fonction du temps';
-	%Affichage(chargement.F(donnee.nelem,:),donnee,option)
+%Affichage(chargement.F(donnee.nelem,:),donnee,option)
 	
     
 disp('IV	Calcul des modes et valeurs propres');
@@ -87,13 +87,15 @@ ModePropre.Nb_ef=100;
 option.type='euler AR';
 [U,Eps]=Resolution_EF(chargement,donnee,ModePropre,SolutionStatique,option);
     
-    option.type='en fonction du temps';
-	option.titre='déplacement extrémité de la poutre en fct du tps';
-	Affichage(U.U(donnee.nelem,:),donnee,option)
-    option.titre='vitesse extrémité de la poutre en fct du tps';
+    %option.type='en fonction du temps';
+	%option.titre='déplacement extrémité de la poutre en fct du tps';
+	%Affichage(U.U(donnee.nelem,:),donnee,option)
+   % option.titre='vitesse extrémité de la poutre en fct du tps';
     
-    Affichage(U.V(donnee.nelem,:),donnee,option)
-    option.titre='accélération extrémité de la poutre en fct du tps';
-    Affichage(U.A(donnee.nelem,:),donnee,option)
+    %Affichage(U.V(donnee.nelem,:),donnee,option)
+    %option.titre='accélération extrémité de la poutre en fct du tps';
+    %Affichage(U.A(donnee.nelem,:),donnee,option)
     
-
+    option.type='animation en fonction du temps';
+	option.titre='Déplacement des points en fct du temps';
+	Affichage(U,donnee,option)

@@ -50,7 +50,7 @@ end
 switch option.type
     case 'euler AR'
     %%Résolution de l'équation différentielle en temps par usage d'un schéma
-    %%Euler arrière (implicite
+    %%Euler arrière (implicite)
     %Conditions initiales
     gg(:,1)=zeros(nbmode,1);
     gg(:,2)=zeros(nbmode,1);

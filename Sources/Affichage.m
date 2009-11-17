@@ -3,6 +3,18 @@ function Affichage(Champs,donnee,option)
 figure
 
 switch option.type
+    case 'animation en fonction du temps'
+       
+        for i=1:donnee.npas
+           
+            img=plot(donnee.x,Champs.U(:,i))
+            
+            title(option.titre);
+            xlabel(sprintf('x'));
+            ylabel('amplitude');
+            F=getframe(img);
+        end
+        movie(F)
 	case 'en fonction du temps'
 		if size(Champs,2)==donnee.npas+1
 			plot(donnee.t,Champs);
