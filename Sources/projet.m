@@ -55,9 +55,11 @@ disp('II	Construction de la matrice');
 	
 disp('III	Construction du chargement');
 	% type de chargement accessible: echelon en bout de poutre, creneau en bout de poutre, harmonique... pour plus d'info voir Construction_Chargement.m
-	chargement.type = 'echelon en bout de poutre';
-	chargement.parametre{1}=1;				%amplitude
-	chargement.parametre{2}=[0.2 0.3];		%quand ?
+	chargement.type = 'echelon en bout de poutre';  %'harmonique';
+	 chargement.parametre{1}=1;				%amplitude
+	 chargement.parametre{2}=[0.2 0.7];		%quand ?
+    %chargement.parametre{1}=1;				%amplitude
+	%chargement.parametre{2}=1000;		%quand ?
 %	chargement.type = 'harmonique';
 %	chargement.parametre{1}=10;		%amplitude
 %	chargement.parametre{2}=60;		%frequence
@@ -76,24 +78,38 @@ disp('IV	Calcul des modes et valeurs propres');
 	option.titre=sprintf('Mode propre numero %d',option.Mode);
 	%Affichage(ModePropre,donnee,option);
     
-disp('IVb Détermination du mode statique')    
+disp('IVb Dï¿½termination du mode statique')    
 SolutionStatique=Statique_EF(matrice,donnee);
    % figure
     %plot(donnee.x,SolutionStatique.U)
     
 disp('V	Resolution du probleme EF sur la base des modes propres');
-%nombre de modes propres à pendre en compte
-ModePropre.Nb_ef=100;
+%nombre de modes propres ï¿½ pendre en compte
+ModePropre.Nb_ef=125;
 option.type='euler AR';
 [U,Eps]=Resolution_EF(chargement,donnee,ModePropre,SolutionStatique,option);
     
     option.type='en fonction du temps';
-	option.titre='déplacement extrémité de la poutre en fct du tps';
+	option.titre='dï¿½placement extrï¿½mitï¿½ de la poutre en fct du tps';
 	Affichage(U.U(donnee.nelem,:),donnee,option)
-    option.titre='vitesse extrémité de la poutre en fct du tps';
-    
+    saveas(gcf, 'deplacement' , 'eps');
+    option.titre='vitesse extrï¿½mitï¿½ de la poutre en fct du tps';
     Affichage(U.V(donnee.nelem,:),donnee,option)
-    option.titre='accélération extrémité de la poutre en fct du tps';
+    saveas(gcf, 'vitesse' , 'eps');
+    option.titre='accï¿½lï¿½ration extrï¿½mitï¿½ de la poutre en fct du tps';
     Affichage(U.A(donnee.nelem,:),donnee,option)
+    saveas(gcf, 'acceleration' , 'eps');
     
-
+% for (i = 1:3)
+%     
+%     figure(i)
+%     
+%     saveName = (['fig', num2str(i)]);
+%     
+%     saveas(gcf, 'deplacement' , 'eps');    
+%     saveas(gcf, 'vitesse' , 'eps');    
+%     saveas(gcf, 'acceleration' , 'eps');
+%     
+%     close
+%     
+% end
