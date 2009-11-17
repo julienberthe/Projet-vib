@@ -34,7 +34,7 @@ function toto=Construction_EF(donnee);
 	for j=1:size(donnee.Elem,2) %ici on fait une boucle sur tous les elements
 		toto.F(j:j+1)=0;
     end
-    toto.F(size(donnee.Elem,2)+1)= donnee.f;
+    toto.F(size(donnee.Elem,2)+1)= donnee.mat.S;
     
     
     %Construction de K pour le cas de charge statique

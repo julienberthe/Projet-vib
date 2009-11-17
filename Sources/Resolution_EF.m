@@ -11,7 +11,10 @@ uudd=zeros(donnee.nelem+1,donnee.npas+1);
 
 %%Nouvelle matrice des vecteurs propres (tenant compte d'un nombre réduit
 %%de mode propre pris en compte)
-mat_vp=ModePropre.Matrice(:,1:nbmode);
+mat_vp=zeros(donnee.nelem+1,nbmode);
+mat_vp(2:donnee.nelem+1,:)=ModePropre.Matrice(:,1:nbmode);
+%mat_vp=ModePropre.Matrice(:,1:nbmode);
+
 
 %%Traitement du chargement à l'extremit
 %Initialisation
@@ -31,7 +34,7 @@ for i=1:donnee.npas
 end
 
 %Calcul du terme de prise en charge de la charge statique
-for i=1:donnee.npas
+for i=1:(donnee.npas+1)
     UFs(:,i)=F(i).*SolutionStatique.U';
     UFsd(:,i)=Fd(i).*SolutionStatique.U';
     UFsdd(:,i)=Fdd(i).*SolutionStatique.U';
@@ -39,14 +42,25 @@ end
 
 
 %%résolution de l'équation différentielle
-%%dai/dtdt+wi²*dai/dt=rho*S*dsig/dtdt*int(phi*us)dx
+%%dai/dtdt+wi²*dai/dt=rho*S*dsig/dtdt*int(phi*us)dx/int(rho*S*phi*phi)dx
 
 
 %calcul de l'integrale int(phi*us)dx à l'aide de la méthode des trapèzes
 for i=1:nbmode
-    int=-donnee.dx/2*(mat_vp(1,i)*SolutionStatique.U(1)+mat_vp(donnee.nelem,i)*SolutionStatique.U(donnee.nelem))+donnee.dx*dot(mat_vp(:,i),SolutionStatique.U);
+    int(i)=0;
+    for j=1:donnee.nelem
+        int(i)=int(i)+donnee.dx/2*donnee.mat.rho*donnee.mat.S*(mat_vp(j,i)*SolutionStatique.U(j)+mat_vp(j+1,i)*SolutionStatique.U(j+1));
+    end
 end
 
+%calcul de l'integrale int(rho*S*phi*phi)dx à l'aide de la méthode des trapèzes
+for i=1:nbmode
+    intt(i)=0;
+    for j=1:donnee.nelem
+        intt(i)=intt(i)+donnee.dx/2*donnee.mat.rho*donnee.mat.S*(mat_vp(j,i)^2+mat_vp(j+1,i)^2);
+    end
+end
+intt
 switch option.type
     case 'euler AR'
     %%Résolution de l'équation différentielle en temps par usage d'un schéma
@@ -55,17 +69,20 @@ switch option.type
     gg(:,1)=zeros(nbmode,1);
     gg(:,2)=zeros(nbmode,1);
     ggd(:,1)=zeros(nbmode,1);
-    ggd(:,2)=zeros(nbmode,1);
-    ggdd(:,1)=zeros(nbmode,1);
         for i=1:(donnee.npas-1)
             for j=1:nbmode
                 %Calcul des coefficients (deplacement)
-                gg(j,i+2)=(2*gg(j,i+1)-gg(j,i)+F(i+2)-2*F(i+1)-F(i))/(1+ModePropre.Valeur(j)*donnee.dt^2);
-                %Calcul des dérivées (vitesse)
-                ggd(j,i+2)=(gg(j,i+2)-gg(j,i+1))/donnee.dt;
-                %Calcul des dérivées seconde (accélération)
-                ggdd(j,i+2)=(ggd(j,i+2)-ggd(j,i+1))/donnee.dt;
+                gg(j,i+2)=(2*gg(j,i+1)-gg(j,i)+(F(i+2)-2*F(i+1)+F(i))*int(j)/intt(j))/(1+ModePropre.Valeur(j)*donnee.dt^2);
             end
+        end
+        
+        
+        
+        for i=1:(donnee.npas)
+           %Calcul des dérivées (vitesse)
+           ggd(:,i+1)=(gg(:,i+1)-gg(:,i))/donnee.dt;
+           %Calcul des dérivées seconde (accélération)
+           ggdd(:,i+1)=(ggd(:,i+1)-ggd(:,i))/donnee.dt;
         end
 
 end
@@ -85,13 +102,14 @@ V=zeros(donnee.nelem+1,donnee.npas+1);
 A=zeros(donnee.nelem+1,donnee.npas+1);
 
 U=uu+UFs;
-
 V=uud+UFsd;
 A=uudd+UFsdd;
 %sauvegarde des résultats
 toto1.U=U;
 toto1.V=V;
 toto1.A=A;
+
+
 
 
 toto2=uu/donnee.mat.L;
