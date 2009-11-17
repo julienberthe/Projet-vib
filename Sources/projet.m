@@ -28,7 +28,7 @@ disp('I	Construction du probleme mecanique EF');
 	
 	%Parametres de la methode EF
 	donnee.nelem = 200;	%nombre d'elements
-	donnee.npas  = 10000;	%nombre de pas de temps
+	donnee.npas  = 100;	%nombre de pas de temps
 
 	%caracteristique du probleme
 	donnee.T= 0.1;	%temps d'etude
@@ -111,4 +111,4 @@ option.type='euler AR';
     
     option.type='animation en fonction du temps';
 	option.titre='Déplacement des points en fct du temps';
-	%Affichage(U,donnee,option)
+	Affichage(U,donnee,option)

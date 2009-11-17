@@ -60,7 +60,7 @@ for i=1:nbmode
         intt(i)=intt(i)+donnee.dx/2*donnee.mat.rho*donnee.mat.S*(mat_vp(j,i)^2+mat_vp(j+1,i)^2);
     end
 end
-intt
+%sintt
 switch option.type
     case 'euler AR'
     %%Résolution de l'équation différentielle en temps par usage d'un schéma

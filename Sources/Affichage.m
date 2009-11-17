@@ -6,15 +6,15 @@ switch option.type
     case 'animation en fonction du temps'
        
         for i=1:donnee.npas
-           
-            img=plot(donnee.x,Champs.U(:,i))
             
+            plot(donnee.x,Champs.U(:,i))
+            axis([donnee.x(1) donnee.x(donnee.nelem+1) min(Champs.U(:)) max(Champs.U(:))]);
             title(option.titre);
             xlabel(sprintf('x'));
             ylabel('amplitude');
-            F=getframe(img);
+            F(i)=getframe;
         end
-        movie(F)
+        movie(F,1,20)
 	case 'en fonction du temps'
 		if size(Champs,2)==donnee.npas+1
 			plot(donnee.t,Champs);
