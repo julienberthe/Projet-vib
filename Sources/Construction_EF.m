@@ -29,25 +29,8 @@ function toto=Construction_EF(donnee);
 	toto.A=donnee.mat.alpha*toto.K_ef+ donnee.mat.beta*toto.M;
     
     %construction du vecteur F pour le cas statique
-    
-    
-	for j=1:size(donnee.Elem,2) %ici on fait une boucle sur tous les elements
-		toto.F(j:j+1)=0;
-    end
-    toto.F(size(donnee.Elem,2)+1)= donnee.mat.S;
-    
-    
-    %Construction de K pour le cas de charge statique
-    
-    toto.Ks=zeros(size(donnee.Elem,2));
-    
-    for j=2:size(donnee.Elem,2)
-        toto.Ks(j-1:j,j-1:j)=toto.K_ef(j:j+1,j:j+1);
-        toto.Fs(j-1:j)=toto.F(j:j+1);
-    end
-    
-    
-        
-        
+    toto.F=zeros(donnee.nelem,1);
+    toto.F(donnee.nelem)=donnee.mat.S;
+ 
 	
 end

@@ -1,20 +1,42 @@
 function Affichage(Champs,donnee,option)
 
-figure
+fenetre=figure;
 
 switch option.type
     case 'animation en fonction du temps'
+       minx=donnee.x(1);
+       maxx=donnee.x(donnee.nelem+1);
+       chpsmin=min(Champs.U(:));
+       chpsmax=max(Champs.U(:));
+       %création du repertoire de sauvegarde
+       if strcmp(option.save,'film')|strcmp(option.save,'images')
+                named=([option.dossier,'_el',num2str(donnee.nelem),'_npas',num2str(donnee.npas),'_mode',num2str(option.nbm)]);
+                mkdir(named);
+       end
        
         for i=1:donnee.npas
             
-            plot(donnee.x,Champs.U(:,i))
-            axis([donnee.x(1) donnee.x(donnee.nelem+1) min(Champs.U(:)) max(Champs.U(:))]);
+            plot(donnee.x,Champs.U(:,i));
+            axis([minx maxx chpsmin chpsmax]);
             title(option.titre);
             xlabel(sprintf('x'));
             ylabel('amplitude');
             F(i)=getframe;
+            %sauvegarde si souhaité
+            if strcmp(option.save,'images')
+                namef=([named,'/','dep_',num2str(i)]);
+                saveas(gcf, namef , 'jpg');
+            end
         end
-        movie(F,1,20)
+        %affichage de l'animation 
+        if strcmp(option.save,'film')
+            namev=([named,'/anim']);
+            namev
+            movie(fenetre,F)
+            movie2avi(F,namev,'compression','Indeo3','fps',15)
+        end
+        
+        
 	case 'en fonction du temps'
 		if size(Champs,2)==donnee.npas+1
 			plot(donnee.t,Champs);
@@ -25,6 +47,7 @@ switch option.type
 		title(option.titre);
 		xlabel(sprintf('t'));
 		ylabel('amplitude');
+        
 	case 'pasapas'
 		for i=1:donnee.npas+1
 			if size(Champs,1)==donnee.nelem+1
