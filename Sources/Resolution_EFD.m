@@ -19,11 +19,11 @@ switch option.schema
         KK(donnee.nelem+1:2*donnee.nelem,1:donnee.nelem)=matrice.K_ef;
         F(donnee.nelem+1:2*donnee.nelem,:)=chargement.F;
         %Calcul préliminaire
-        C=(MM^-1*KK)/donnee.dt;
+        C=(eye(2*donnee.nelem,2*donnee.nelem)+(MM^-1*KK)*donnee.dt)^-1;
 
         %%établissement du schéma itératif
         for i=1:donnee.npas
-            q(:,i+1)=q(:,i)-C*q(:,i)+MM^-1*F(:,i);
+            q(:,i+1)=C*(q(:,i)+donnee.dt*MM^-1*F(:,i+1));
         end
         U=q(1:donnee.nelem,:);
         V=q(donnee.nelem+1:2*donnee.nelem,:);
@@ -38,8 +38,8 @@ switch option.schema
     case 'newmark'
         %non implémenté
 end
-toto1.U=zeros(1:donnee.nelem+1,donnee.npas+1);
-toto1.V=zeros(1:donnee.nelem+1,donnee.npas+1);
+toto1.U=zeros(donnee.nelem+1,donnee.npas+1);
+toto1.V=zeros(donnee.nelem+1,donnee.npas+1);
 %tot1.A=zeros(1:donnee.nelem+1,donnee.npas);
             %sauvegarde des résultats
     toto1.U(2:donnee.nelem+1,:)=U;
