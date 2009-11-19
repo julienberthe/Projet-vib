@@ -80,7 +80,7 @@ disp('III	Construction du chargement');
     option.schema='euler AR';  %%champs possibles 'euler AR', 'euler AV' (non implémenté) ou 'newmark' (non implémenté)
     option.resolution='modale'; %%champs possibles 'modale' ou 'directe'
     %nombre de modes propres à pendre en compte
-    option.Nb_ef=5;
+    option.Nb_ef=50;
     [ModePropre,U,Eps]=EF(chargement,matriceS,donneeS,option);
     
     
@@ -89,7 +89,7 @@ disp('III	Construction du chargement');
     option.Mode=[1 2 3 4];
     option.titre=sprintf('Mode propre numero %d',option.Mode);
 
-    Affichage(ModePropre,donneeS,option);
+%    Affichage(ModePropre,donneeS,option);
     %Affichage(ModePropree,donneee,option);
         
     option.type='en fonction du temps';

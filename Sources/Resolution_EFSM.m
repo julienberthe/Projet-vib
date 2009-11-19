@@ -87,9 +87,31 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
                    %Calcul des dérivées seconde (accélération)
                    ggdd(:,i+1)=(ggd(:,i+1)-ggd(:,i))/donnee.dt;
                 end
+            case 'euler AV'
+                %%Résolution de l'équation différentielle en temps par usage d'un schéma
+            %%Euler avant (explicite)
+            %Conditions initiales
+            gg(:,1)=zeros(nbmode,1);
+            gg(:,2)=zeros(nbmode,1);
+            gg(:,3)=zeros(nbmode,1);
+            ggd(:,1)=zeros(nbmode,1);
+                for i=1:(donnee.npas-2)
+                    for j=1:nbmode
+                        %Calcul des coefficients (deplacement)
+                        gg(j,i+3)=gg(j,i+2)*(2-donnee.dt^2*ModePropre.Valeur(j))-gg(j,i+1)+(F(i+2)-2*F(i+1)+F(i))*int(j)/intt(j);
+                    end
+                end
+
+
+
+                for i=1:(donnee.npas)
+                   %Calcul des dérivées (vitesse)
+                   ggd(:,i+1)=(gg(:,i+1)-gg(:,i))/donnee.dt;
+                   %Calcul des dérivées seconde (accélération)
+                   ggdd(:,i+1)=(ggd(:,i+1)-ggd(:,i))/donnee.dt;
+                end
 
         end
-
 
 
         %%calcul du deplacement, de la vitesse et de l'accélération
