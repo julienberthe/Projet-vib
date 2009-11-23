@@ -1,9 +1,9 @@
 function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStatique,option)
 
-        %%Résolution sur la base modale + mode statique
+        %%Rï¿½solution sur la base modale + mode statique
 
         %%initialisation
-        nbmode=option.Nb_ef; %nombre de modes propres à prendre en compte
+        nbmode=option.Nb_ef; %nombre de modes propres ï¿½ prendre en compte
         gg=zeros(nbmode,donnee.npas+1);
         ggd=zeros(nbmode,donnee.npas+1);
         ggdd=zeros(nbmode,donnee.npas+1);
@@ -12,14 +12,14 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
         uudd=zeros(donnee.nelem+1,donnee.npas+1);
 
 
-        %%Nouvelle matrice des vecteurs propres (tenant compte d'un nombre réduit
+        %%Nouvelle matrice des vecteurs propres (tenant compte d'un nombre rï¿½duit
         %%de mode propre pris en compte)
         mat_vp=zeros(donnee.nelem+1,nbmode);
         mat_vp(2:donnee.nelem+1,:)=ModePropre.Matrice(:,1:nbmode);
         %mat_vp=ModePropre.Matrice(:,1:nbmode);
 
 
-        %%Traitement du chargement à l'extremit
+        %%Traitement du chargement ï¿½ l'extremit
         %Initialisation
         F=chargement.F(donnee.nelem,:);
 
@@ -30,9 +30,9 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
         Fd(1)=0;
         Fdd(1)=0;
         for i=1:donnee.npas
-            %Calcul de la dérivée en temps du chargement
+            %Calcul de la dï¿½rivï¿½e en temps du chargement
             Fd(i+1)=(F(i+1)-F(i))/donnee.dt;
-            %Calcul de la dérivée seconde en temps du chargement
+            %Calcul de la dï¿½rivï¿½e seconde en temps du chargement
             Fdd(i+1)=(Fd(i+1)-Fd(i))/donnee.dt;
         end
 
@@ -44,11 +44,11 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
         end
 
 
-        %%résolution de l'équation différentielle
-        %%dai/dtdt+wi²*dai/dt=rho*S*dsig/dtdt*int(phi*us)dx/int(rho*S*phi*phi)dx
+        %%rï¿½solution de l'ï¿½quation diffï¿½rentielle
+        %%dai/dtdt+wiï¿½*dai/dt=rho*S*dsig/dtdt*int(phi*us)dx/int(rho*S*phi*phi)dx
 
 
-        %calcul de l'integrale int(phi*us)dx à l'aide de la méthode des trapèzes
+        %calcul de l'integrale int(phi*us)dx ï¿½ l'aide de la mï¿½thode des trapï¿½zes
         for i=1:nbmode
             int(i)=0;
             for j=1:donnee.nelem
@@ -56,7 +56,7 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
             end
         end
 
-        %calcul de l'integrale int(rho*S*phi*phi)dx à l'aide de la méthode des trapèzes
+        %calcul de l'integrale int(rho*S*phi*phi)dx ï¿½ l'aide de la mï¿½thode des trapï¿½zes
         for i=1:nbmode
             intt(i)=0;
             for j=1:donnee.nelem
@@ -66,8 +66,8 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
         %sintt
         switch option.schema
             case 'euler AR'
-            %%Résolution de l'équation différentielle en temps par usage d'un schéma
-            %%Euler arrière (implicite)
+            %%Rï¿½solution de l'ï¿½quation diffï¿½rentielle en temps par usage d'un schï¿½ma
+            %%Euler arriï¿½re (implicite)
             %Conditions initiales
             gg(:,1)=zeros(nbmode,1);
             gg(:,2)=zeros(nbmode,1);
@@ -82,13 +82,13 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
 
 
                 for i=1:(donnee.npas)
-                   %Calcul des dérivées (vitesse)
+                   %Calcul des dï¿½rivï¿½es (vitesse)
                    ggd(:,i+1)=(gg(:,i+1)-gg(:,i))/donnee.dt;
-                   %Calcul des dérivées seconde (accélération)
+                   %Calcul des dï¿½rivï¿½es seconde (accï¿½lï¿½ration)
                    ggdd(:,i+1)=(ggd(:,i+1)-ggd(:,i))/donnee.dt;
                 end
             case 'euler AV'
-                %%Résolution de l'équation différentielle en temps par usage d'un schéma
+                %%Rï¿½solution de l'ï¿½quation diffï¿½rentielle en temps par usage d'un schï¿½ma
             %%Euler avant (explicite)
             %Conditions initiales
             gg(:,1)=zeros(nbmode,1);
@@ -105,16 +105,16 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
 
 
                 for i=1:(donnee.npas)
-                   %Calcul des dérivées (vitesse)
+                   %Calcul des dï¿½rivï¿½es (vitesse)
                    ggd(:,i+1)=(gg(:,i+1)-gg(:,i))/donnee.dt;
-                   %Calcul des dérivées seconde (accélération)
+                   %Calcul des dï¿½rivï¿½es seconde (accï¿½lï¿½ration)
                    ggdd(:,i+1)=(ggd(:,i+1)-ggd(:,i))/donnee.dt;
                 end
 
         end
 
 
-        %%calcul du deplacement, de la vitesse et de l'accélération
+        %%calcul du deplacement, de la vitesse et de l'accï¿½lï¿½ration
         for i=1:donnee.npas+1
            uu(:,i)=mat_vp*gg(:,i);
            uud(:,i)=mat_vp*ggd(:,i);
@@ -130,10 +130,14 @@ function [toto1,toto2]=Resolution_EFSM(chargement,donnee,ModePropre,SolutionStat
         V=uud+UFsd;
         A=uudd+UFsdd;
 
+        %calcul de Eps
+        ee=zeros(donnee.nelem,donnee.npas+1);
+        for i=1:donnee.nelem
+            ee(i,:)=(U(i+1,:)-U(i,:))/donnee.dx;
+        end
     
-        %sauvegarde des résultats
+        %sauvegarde des rï¿½sultats
         toto1.U=U;
         toto1.V=V;
         toto1.A=A;
-
-    toto2=toto1.U/donnee.mat.L;
+        toto2=ee;

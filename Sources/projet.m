@@ -19,7 +19,7 @@ disp('I	Construction du probleme mecanique EF');
 	donnee.mat.L=1;			%longueur:
 	donnee.mat.S=10^(-4);		%section:
 	donnee.mat.E=220*10^9;		%module de young
-	donnee.mat.rho=70000;		%masse volumique
+	donnee.mat.rho=7000;		%masse volumique
 	donnee.mat.alpha=0;		%coefficient d'amortissement C=alpha*K+beta*M
 	donnee.mat.beta=0;
 	%parametres utiles par la suite
@@ -28,10 +28,10 @@ disp('I	Construction du probleme mecanique EF');
 	
 	%Parametres de la methode EF
 	donnee.nelem = 160;	%nombre d'elements
-	donnee.npas  = 500;	%nombre de pas de temps
+	donnee.npas  = 5000;	%nombre de pas de temps
 
 	%caracteristique du probleme
-	donnee.T= 0.1;	%temps d'etude
+	donnee.T= 1;	%temps d'etude
     
     %mise en donnee
 	for i=1:donnee.nelem
@@ -62,7 +62,7 @@ disp('III	Construction du chargement');
 	% type de chargement accessible: echelon en bout de poutre, creneau en bout de poutre, harmonique... pour plus d'info voir Construction_Chargement.m
 	chargement.type = 'echelon en bout de poutre';
 	chargement.parametre{1}=10000;				%amplitude
-	chargement.parametre{2}=[0.2 0.5];		%quand ?
+	chargement.parametre{2}=[0.2 0.3];		%quand ?
     %chargement.type = 'harmonique';
     %chargement.parametre{1}=10;		%amplitude
     %chargement.parametre{2}=60;		%frequence
@@ -75,16 +75,16 @@ disp('III	Construction du chargement');
 	
     
     disp('========================================');
-    disp('==============Résolution EF=============');
+    disp('==============Rï¿½solution EF=============');
     disp('========================================');
-    option.schema='euler AR';  %%champs possibles 'euler AR', 'euler AV' (non implémenté) ou 'newmark' (non implémenté)
+    option.schema='euler AR';  %%champs possibles 'euler AR', 'euler AV' (non implï¿½mentï¿½) ou 'newmark' (non implï¿½mentï¿½)
     option.resolution='modale'; %%champs possibles 'modale' ou 'directe'
-    %nombre de modes propres à pendre en compte
+    %nombre de modes propres ï¿½ pendre en compte
     option.Nb_ef=50;
     [ModePropre,U,Eps]=EF(chargement,matriceS,donneeS,option);
     
     
-    %%%%%Affichages divers et variés
+    %%%%%Affichages divers et variï¿½s
     option.type='4 Modes Propres';
     option.Mode=[1 2 3 4];
     option.titre=sprintf('Mode propre numero %d',option.Mode);
@@ -93,17 +93,17 @@ disp('III	Construction du chargement');
     %Affichage(ModePropree,donneee,option);
         
     option.type='en fonction du temps';
-	option.titre='déplacement extrémité de la poutre en fct du tps';
+	option.titre='dï¿½placement extrï¿½mitï¿½ de la poutre en fct du tps';
 	Affichage(U.U(donnee.nelem+1,:),donneeS,option)
-    option.titre='vitesse extrémité de la poutre en fct du tps';
+    option.titre='vitesse extrï¿½mitï¿½ de la poutre en fct du tps';
     %Affichage(U.V(donnee.nelem+1,:),donnee,option)
     
     
-    option.titre='accélération extrémité de la poutre en fct du tps';
+    option.titre='accï¿½lï¿½ration extrï¿½mitï¿½ de la poutre en fct du tps';
     %Affichage(U.A(donnee.nelem+1,:),donnee,option)
     
     option.type='animation en fonction du temps';
-	option.titre='Déplacement des points en fct du temps';
+	option.titre='Dï¿½placement des points en fct du temps';
     
     option.save='non';    %%champs possibles 'non', 'film' ou 'images'
     option.dossier='echelon';
@@ -111,10 +111,13 @@ disp('III	Construction du chargement');
 	%Affichage(U,donnee,option)
 
     option.type='3D';
-    option.titre='Déplacement de la poutre en fonction du temps et de labscisse';
+    option.titre='Dï¿½placement de la poutre en fonction du temps et de labscisse';
     Affichage(U.U,donnee,option);
     option.titre='Vitesse de la poutre en fonction du temps et de labscisse';
     Affichage(U.V,donnee,option);
+    option.titre='DÃ©formation de la poutre en fonction du temps et de labscisse';
+    Affichage(Eps,donnee,option)
+    
     
    tps2=toc(tps1);
    disp('Temps de calcul: ')
